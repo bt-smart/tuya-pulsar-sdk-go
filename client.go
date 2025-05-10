@@ -3,11 +3,12 @@ package pulsar
 import (
 	"context"
 	"fmt"
+	"github.com/tuya/tuya-pulsar-sdk-go/pkg/btlog"
+	"go.uber.org/zap"
 	"strings"
 	"time"
 
 	"github.com/apache/pulsar-client-go/pulsar"
-	"github.com/tuya/tuya-pulsar-sdk-go/pkg/tylog"
 )
 
 const (
@@ -69,10 +70,10 @@ func (c clientImpl) NewConsumer(config ConsumerConfig) (Consumer, error) {
 			Authentication:             config.Auth,
 		})
 		if err != nil {
-			tylog.Error("create clientImpl failed", tylog.ErrorField(err), tylog.Any("config", c.clientCfg))
+			btlog.Logger.Error("create clientImpl failed", zap.String("err", err.Error()), zap.Any("config", c.clientCfg))
 			return nil, err
 		}
-		tylog.Info("create clientImpl success", tylog.Any("config", c.clientCfg))
+		btlog.Logger.Info("create clientImpl success", zap.Any("config", c.clientCfg))
 		c.cli = client
 	}
 	consumer, err := c.cli.Subscribe(pulsar.ConsumerOptions{
@@ -81,10 +82,10 @@ func (c clientImpl) NewConsumer(config ConsumerConfig) (Consumer, error) {
 		Type:             pulsar.Failover,
 	})
 	if err != nil {
-		tylog.Error("create consumer failed", tylog.ErrorField(err), tylog.Any("config", config))
+		btlog.Logger.Error("create consumer failed", zap.String("err", err.Error()), zap.Any("config", config))
 		return nil, err
 	}
-	tylog.Info("create consumer success", tylog.Any("config", config))
+	btlog.Logger.Info("create consumer success", zap.Any("config", config))
 	return consumerV2{consumer}, nil
 }
 
@@ -98,31 +99,31 @@ func (c consumerV2) ReceiveAndHandle(ctx context.Context, handler PayloadHandler
 			for {
 				msg, err := c.consumer.Receive(context.Background())
 				if err != nil {
-					tylog.Error("consumer receive failed", tylog.ErrorField(err), tylog.Any("consumer", c.consumer))
+					btlog.Logger.Error("consumer receive failed", zap.Error(err), zap.Any("consumer", c.consumer))
 					continue
 				}
 				start := time.Now()
 				id := MsgId(msg.ID())
-				tylog.Info("consume receive", tylog.Any("messageId", id))
+				btlog.Logger.Info("consume receive", zap.Any("message", msg))
 				err = handler.HandlePayload(ctx, msg, msg.Payload())
 				if err != nil {
-					tylog.Warn("consumer HandlePayload failed", tylog.ErrorField(err), tylog.Any("consumer", c.consumer), tylog.Any("msg", msg))
+					btlog.Logger.Warn("consumer HandlePayload failed", zap.Error(err), zap.Any("consumer", c.consumer), zap.Any("msg", msg))
 				}
 				duration := time.Since(start)
 				ackStart := time.Now()
-				tylog.Info("consume handle finish", tylog.Any("messageId", id), tylog.Any("cost", duration))
+				btlog.Logger.Info("consume handle finish", zap.Any("messageId", id), zap.Any("cost", duration))
 				retryCount := 3
 				for j := 0; j < retryCount; j++ {
 					err := c.consumer.Ack(msg)
 					if err != nil {
-						tylog.Warn("ack failed", tylog.String("msg", string(msg.Payload())))
+						btlog.Logger.Warn("ack failed", zap.String("msg", string(msg.Payload())))
 						time.Sleep(time.Second)
 					} else {
 						break
 					}
 				}
 				ackDuration := time.Since(ackStart)
-				tylog.Info("consume ack finish", tylog.Any("messageId", id), tylog.Any("cost", ackDuration))
+				btlog.Logger.Info("consume ack finish", zap.Any("messageId", id), zap.Any("cost", ackDuration))
 			}
 		}()
 	}

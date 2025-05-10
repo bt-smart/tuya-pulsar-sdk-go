@@ -1,15 +1,16 @@
 module github.com/tuya/tuya-pulsar-sdk-go
 
-go 1.21
+go 1.23
 
-toolchain go1.21.5
+toolchain go1.23.6
 
 require (
 	github.com/apache/pulsar-client-go v0.14.0
+	github.com/bt-smart/btlog v1.2.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
-	go.uber.org/zap v1.19.0
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0
+	go.uber.org/zap v1.27.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (
@@ -52,8 +53,8 @@ require (
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	go.uber.org/goleak v1.2.1 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/goleak v1.3.0 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/oauth2 v0.11.0 // indirect
