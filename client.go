@@ -3,7 +3,7 @@ package pulsar
 import (
 	"context"
 	"fmt"
-	"github.com/tuya/tuya-pulsar-sdk-go/pkg/btlog"
+	"github.com/bt-smart/tuya-pulsar-sdk-go/pkg/btlog"
 	"go.uber.org/zap"
 	"strings"
 	"time"

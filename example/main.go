@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"github.com/tuya/tuya-pulsar-sdk-go/pkg/btlog"
+	"github.com/bt-smart/tuya-pulsar-sdk-go/pkg/btlog"
 	"go.uber.org/zap"
 
-	pulsar "github.com/tuya/tuya-pulsar-sdk-go"
-	"github.com/tuya/tuya-pulsar-sdk-go/pkg/tyutils"
+	pulsar "github.com/bt-smart/tuya-pulsar-sdk-go"
+	"github.com/bt-smart/tuya-pulsar-sdk-go/pkg/tyutils"
 )
 
 func main() {
