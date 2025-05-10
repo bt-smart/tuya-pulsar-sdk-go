@@ -1,4 +1,4 @@
-module github.com/tuya/tuya-pulsar-sdk-go
+module github.com/bt-smart/tuya-pulsar-sdk-go
 
 go 1.23
 
