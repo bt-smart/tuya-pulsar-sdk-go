@@ -6,7 +6,7 @@ toolchain go1.23.6
 
 require (
 	github.com/apache/pulsar-client-go v0.14.0
-	github.com/bt-smart/btlog v1.2.0
+	github.com/bt-smart/btlog v1.2.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	go.uber.org/zap v1.27.0
