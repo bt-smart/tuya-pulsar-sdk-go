@@ -104,26 +104,26 @@ func (c consumerV2) ReceiveAndHandle(ctx context.Context, handler PayloadHandler
 				}
 				start := time.Now()
 				id := MsgId(msg.ID())
-				btlog.Logger.Info("consume receive", zap.Any("message", msg))
+				btlog.Logger.Debug("consume receive", zap.Any("message", msg))
 				err = handler.HandlePayload(ctx, msg, msg.Payload())
 				if err != nil {
-					btlog.Logger.Warn("consumer HandlePayload failed", zap.Error(err), zap.Any("consumer", c.consumer), zap.Any("msg", msg))
+					btlog.Logger.Error("consumer HandlePayload failed", zap.Error(err), zap.Any("consumer", c.consumer), zap.Any("msg", msg))
 				}
 				duration := time.Since(start)
 				ackStart := time.Now()
-				btlog.Logger.Info("consume handle finish", zap.Any("messageId", id), zap.Any("cost", duration))
+				btlog.Logger.Debug("consume handle finish", zap.Any("messageId", id), zap.Any("cost", duration))
 				retryCount := 3
 				for j := 0; j < retryCount; j++ {
 					err := c.consumer.Ack(msg)
 					if err != nil {
-						btlog.Logger.Warn("ack failed", zap.String("msg", string(msg.Payload())))
+						btlog.Logger.Error("ack failed", zap.String("msg", string(msg.Payload())))
 						time.Sleep(time.Second)
 					} else {
 						break
 					}
 				}
 				ackDuration := time.Since(ackStart)
-				btlog.Logger.Info("consume ack finish", zap.Any("messageId", id), zap.Any("cost", ackDuration))
+				btlog.Logger.Debug("consume ack finish", zap.Any("messageId", id), zap.Any("cost", ackDuration))
 			}
 		}()
 	}
